@@ -1,0 +1,51 @@
+#Maaike Allers, 3747026
+
+#Assignment 1: Create a plot from y = 2*cos(x) with x ranging from -10 to 10
+x <- seq(-10, 10, 1)
+#create a vector x ranging from -10 to 10
+y <- 2*cos(x)
+#create a vector y with outcomes of the formula 2*cos(x)
+table_1 <- cbind (x, y)
+#create a table with an x and a y column
+plot(x, y, type = "b")
+#create a line plot with the data points indicated
+
+#Assignment 2: Create an array/graph that shows the number of individuals with a certain mutation in BRAF
+
+#First Dowload the .txt file from http://www.cbioportal.org/:
+#1: Query: Select Cancer Study: Pappilary Thyroid Carcinoma
+#2: Select Genomic Profiles: Mutations
+#3: Select Patient/Case set: Sequenced Tumors (401)
+#4: Enter gene set: User defined list: 'BRAF'
+#5: Submit
+#6: Go to Download tab
+#7: Download Tab-delimited Format
+#8: Save .txt file in R default map as mutations.txt
+#Continue with code
+
+table_mutations <- read.table('mutations.txt', row.names = 1, stringsAsFactors = FALSE)
+#read in the table from an already downoaded file
+len_mut <- length(table_mutations['BRAF',])
+overview_mut <- c(table_mutations['BRAF', 2:(len_mut)])
+uni_mut <- unique(overview_mut)
+#Create a list of the unique entries present in the mutation row
+
+list_counts <- as.numeric()
+#Create an empty vector to store the counts in
+counting_mut <- function(pos_mut=1){
+  # a function that counts the amount of times an entry from the uni_mut list in present in the data table
+  mut <- as.character(uni_mut[pos_mut])
+  index <- mut == table_mutations['BRAF',]
+  count <- as.numeric(sum(index))
+  list_counts <- c(list_counts, count)
+  list_counts
+}
+
+#Run the function for all items in the uni_mut list
+varia_1 <- 1:length(uni_mut) 
+for (item in varia_1){
+  list_counts <- counting_mut(item)
+}
+
+#Create a barplot
+barplot(list_counts,names.arg = uni_mut, main = 'Amount of times a specific mutation occured in an individual')
